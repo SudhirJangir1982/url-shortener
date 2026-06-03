@@ -27,16 +27,20 @@ Route::get('/dashboard', function () {
 
 Route::get('/s/{code}', ShortUrlRedirectController::class)->name('short-url.redirect');
 
+/* Guest Routes */
 Route::middleware('guest')->group(function () {
     Route::get('invitation/{token}', [AcceptInvitationController::class, 'create'])->name('invitation.accept');
     Route::post('invitation/{token}', [AcceptInvitationController::class, 'store'])->name('invitation.accept.store');
 });
 
+/* Authenticated Routes */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+
+    /* Company Admin Routes */
     Route::middleware(['verified', 'company_admin'])
         ->prefix('admin')
         ->name('admin.')
@@ -51,6 +55,9 @@ Route::middleware('auth')->group(function () {
             Route::post('/team/invitations', [AdminTeamController::class, 'storeInvitation'])->name('team.invitations.store');
         });
 
+
+
+    /* Company Member Routes */
     Route::middleware(['verified', 'company_member'])
         ->prefix('member')
         ->name('member.')
@@ -61,6 +68,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/short-urls/{shortUrl}', [MemberShortUrlController::class, 'destroy'])->name('short-urls.destroy');
         });
 
+        /* Super Admin Routes */
     Route::middleware('super_admin')
         ->prefix('super-admin')
         ->name('super-admin.')

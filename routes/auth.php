@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('guest')->group(function () {
     Route::get('login', fn () => redirect('/'))->name('login');
 
+    /* Login Routes */
     Route::get('login/{role}', [AuthenticatedSessionController::class, 'create'])
         ->where('role', 'super-admin|admin|member')
         ->name('login.role');
@@ -22,6 +23,7 @@ Route::middleware('guest')->group(function () {
         ->where('role', 'super-admin|admin|member')
         ->name('login.role.store');
 
+    /* Register Routes */
     Route::get('register/{role}', [RegisteredUserController::class, 'create'])
         ->where('role', 'admin|member')
         ->name('register.role');
@@ -30,15 +32,18 @@ Route::middleware('guest')->group(function () {
         ->where('role', 'admin|member')
         ->name('register.role.store');
 
+    /* Forgot Password Routes */
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
         ->name('password.email');
 
+    /* Reset Password Routes */
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');
 
+    /* Reset Password Store Routes */
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
 });
